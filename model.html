@@ -1,0 +1,4150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style>
+    body {
+      font: normal normal normal 14px Helvetica, Arial, Sans-serif;
+      background: white;
+    }
+
+    div.header {
+      text-align: center;
+    }
+
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 0.5em;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1 class="main-header">Aggregator API Data Model Documentation</h1>
+  </div>
+  <div class="generalInfo">
+    <p class="infoField">
+      <strong> Database engine: </strong>
+      PostgreSQL
+    </p>
+    <p class="infoField">
+      <strong> Version: </strong>
+      2.3
+    </p>
+    <p class="infoField">
+      <strong> Description: </strong>
+    </p>
+  </div>
+  <div class="tableOfContents">
+    <h2>
+      Table of contents
+    </h2>
+    <ol type="1" class="contentsList">
+      <li>
+        <a href="#tables"> Tables </a>
+        <ol class="contentsSublist">
+          <li>
+            <a href="#tableClient"> client </a>
+          </li>
+          <li>
+            <a href="#tableEmployee"> employee </a>
+          </li>
+          <li>
+            <a href="#tableRole"> role </a>
+          </li>
+          <li>
+            <a href="#tableHasRole"> has_role </a>
+          </li>
+          <li>
+            <a href="#tableProduct"> product </a>
+          </li>
+          <li>
+            <a href="#tableOffer"> offer </a>
+          </li>
+          <li>
+            <a href="#tableSignedOffer"> signed_offer </a>
+          </li>
+          <li>
+            <a href="#tableClientCategory"> client_category </a>
+          </li>
+          <li>
+            <a href="#tableProductCategory"> product_category </a>
+          </li>
+          <li>
+            <a href="#tablePerson"> person </a>
+          </li>
+          <li>
+            <a href="#tableClientRelated"> client_related </a>
+          </li>
+          <li>
+            <a href="#tableOfferRelated"> offer_related </a>
+          </li>
+          <li>
+            <a href="#tableOfferRelationType"> offer_relation_type </a>
+          </li>
+          <li>
+            <a href="#tableClientRelationType"> client_relation_type </a>
+          </li>
+          <li>
+            <a href="#tablePayment"> payment </a>
+          </li>
+          <li>
+            <a href="#tablePayout"> payout </a>
+          </li>
+          <li>
+            <a href="#tablePayoutReason"> payout_reason </a>
+          </li>
+          <li>
+            <a href="#tableCase"> case </a>
+          </li>
+          <li>
+            <a href="#tableInSignedOffer"> in_signed_offer </a>
+          </li>
+          <li>
+            <a href="#tableInOffer"> in_offer </a>
+          </li>
+          <li>
+            <a href="#tablePolicyType"> policy_type </a>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <a href="#references"> References </a>
+        <ol class="contentsSublist">
+          <li>
+            <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+          </li>
+          <li>
+            <a href="#referenceHasRoleRole"> has_role_role </a>
+          </li>
+          <li>
+            <a href="#referenceProductProductCategory">
+              product_product_category
+            </a>
+          </li>
+          <li>
+            <a href="#referenceClientPerson"> client_person </a>
+          </li>
+          <li>
+            <a href="#referenceClientClientCategory">
+              client_client_category
+            </a>
+          </li>
+          <li>
+            <a href="#referenceClientRelatedClient">
+              client_related_client
+            </a>
+          </li>
+          <li>
+            <a href="#referenceClientRelatedPerson">
+              client_related_person
+            </a>
+          </li>
+          <li>
+            <a href="#referenceClientRelatedClientRelationType">
+              client_related_client_relation_type
+            </a>
+          </li>
+          <li>
+            <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+          </li>
+          <li>
+            <a href="#referenceOfferClient"> offer_client </a>
+          </li>
+          <li>
+            <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+          </li>
+          <li>
+            <a href="#referenceOfferProduct"> offer_product </a>
+          </li>
+          <li>
+            <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+          </li>
+          <li>
+            <a href="#referenceOfferRelatedSignedOffer">
+              offer_related_signed_offer
+            </a>
+          </li>
+          <li>
+            <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+          </li>
+          <li>
+            <a href="#referenceOfferRelatedOfferRelationType">
+              offer_related_offer_relation_type
+            </a>
+          </li>
+          <li>
+            <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+          </li>
+          <li>
+            <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+          </li>
+          <li>
+            <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+          </li>
+          <li>
+            <a href="#referencePaymentPerson"> payment_person </a>
+          </li>
+          <li>
+            <a href="#referencePayoutPerson"> payout_person </a>
+          </li>
+          <li>
+            <a href="#referencePaymentClient"> payment_client </a>
+          </li>
+          <li>
+            <a href="#referencePayoutClient"> payout_client </a>
+          </li>
+          <li>
+            <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+          </li>
+          <li>
+            <a href="#referenceOfferHasRole"> offer_has_role </a>
+          </li>
+          <li>
+            <a href="#referenceInSignedOfferSignedOffer">
+              in_signed_offer_signed_offer
+            </a>
+          </li>
+          <li>
+            <a href="#referenceInOfferOffer"> in_offer_offer </a>
+          </li>
+          <li>
+            <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+          </li>
+          <li>
+            <a href="#referenceInOfferCase"> in_offer_case </a>
+          </li>
+          <li>
+            <a href="#referencePayoutCase"> payout_case </a>
+          </li>
+          <li>
+            <a href="#referenceSignedOfferPolicyType">
+              signed_offer_policy_type
+            </a>
+          </li>
+          <li>
+            <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <a href="#areas"> Areas </a>
+        <ol class="contentsSublist">
+          <li>
+            <a href="#areaClients"> Clients </a>
+          </li>
+          <li>
+            <a href="#areaEmployees"> Employees </a>
+          </li>
+          <li>
+            <a href="#areaProducts"> Products </a>
+          </li>
+          <li>
+            <a href="#areaOffers"> Offers </a>
+          </li>
+          <li>
+            <a href="#areaPayments"> Payments </a>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+  <div id="tablesDiv">
+    <h2 id="tables">
+      1. Tables
+    </h2>
+    <h3 id="tableClient">
+      1.1. Table client
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      list of all our clients
+    </p>
+    <h4>
+      1.1.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            code
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            person_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_category_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.1.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            client_ak_1
+          </td>
+          <td>
+            code
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableEmployee">
+      1.2. Table employee
+    </h3>
+    <h4>
+      1.2.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            code
+          </td>
+          <td>
+            varchar(32)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            first_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            last_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            birth_date
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.2.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            employee_ak_1
+          </td>
+          <td>
+            code
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableRole">
+      1.3. Table role
+    </h3>
+    <h4>
+      1.3.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            role_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.3.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            role_ak_1
+          </td>
+          <td>
+            role_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableHasRole">
+      1.4. Table has_role
+    </h3>
+    <h4>
+      1.4.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            employee_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            role_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            start_date
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            end_date
+          </td>
+          <td>
+            date
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.4.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            has_role_ak_1
+          </td>
+          <td>
+            employee_id, role_id, start_date
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableProduct">
+      1.5. Table product
+    </h3>
+    <h4>
+      1.5.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            product_name
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            product_category_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            product_description
+          </td>
+          <td>
+            text
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.5.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            product_ak_1
+          </td>
+          <td>
+            product_name, product_category_id
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableOffer">
+      1.6. Table offer
+    </h3>
+    <h4>
+      1.6.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            product_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            has_role_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            date_offered
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            policy_type_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            paymemt_amount
+          </td>
+          <td>
+            decimal(10,2)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            terms
+          </td>
+          <td>
+            text
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            is_active
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableSignedOffer">
+      1.7. Table signed_offer
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      list of all signed offers with clients
+    </p>
+    <h4>
+      1.7.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            product_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            has_role_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            date_signed
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            policy_type_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            payment_amount
+          </td>
+          <td>
+            decimal(10,2)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            terms
+          </td>
+          <td>
+            text
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            is_active
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            start_date
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            end_date
+          </td>
+          <td>
+            date
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableClientCategory">
+      1.8. Table client_category
+    </h3>
+    <h4>
+      1.8.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            category_name
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.8.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            client_category_ak_1
+          </td>
+          <td>
+            category_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableProductCategory">
+      1.9. Table product_category
+    </h3>
+    <h4>
+      1.9.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            category_name
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.9.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            product_category_ak_1
+          </td>
+          <td>
+            category_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tablePerson">
+      1.10. Table person
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      list of all private individuals that are clients or related to them
+    </p>
+    <h4>
+      1.10.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            code
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            first_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            last_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            address
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            phone
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            mobile
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            email
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.10.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            person_ak_1
+          </td>
+          <td>
+            code
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableClientRelated">
+      1.11. Table client_related
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      all relations between persons and clients
+    </p>
+    <h4>
+      1.11.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            person_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_relation_type_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            is_active
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.11.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            client_related_ak_1
+          </td>
+          <td>
+            client_id, person_id, client_relation_type_id
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableOfferRelated">
+      1.12. Table offer_related
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      list of all persons related to offers
+    </p>
+    <h4>
+      1.12.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            signed_offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            person_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            offer_relation_type_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            is_active
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableOfferRelationType">
+      1.13. Table offer_relation_type
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      dictionary with all types of relation person could have with an offer
+    </p>
+    <h4>
+      1.13.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            relation_type
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.13.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            offer_relation_type_ak_1
+          </td>
+          <td>
+            relation_type
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableClientRelationType">
+      1.14. Table client_relation_type
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      dictionary with a list of all possible relation types
+    </p>
+    <h4>
+      1.14.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            relation_type
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.14.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            client_relation_type_ak_1
+          </td>
+          <td>
+            relation_type
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tablePayment">
+      1.15. Table payment
+    </h3>
+    <h4>
+      1.15.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            signed_offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            payment_date
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            amount
+          </td>
+          <td>
+            decimal(10,2)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            description
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            person_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tablePayout">
+      1.16. Table payout
+    </h3>
+    <h4>
+      1.16.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            signed_offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            payout_date
+          </td>
+          <td>
+            date
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            amount
+          </td>
+          <td>
+            decimal(10,2)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            case_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            payout_reason_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            person_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            client_id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tablePayoutReason">
+      1.17. Table payout_reason
+    </h3>
+    <h4>
+      1.17.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            reason_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.17.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            payout_reason_ak_1
+          </td>
+          <td>
+            reason_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableCase">
+      1.18. Table case
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      list of all cases insurance policy could cover
+    </p>
+    <h4>
+      1.18.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            case_name
+          </td>
+          <td>
+            varchar(255)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            description
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.18.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            case_ak_1
+          </td>
+          <td>
+            case_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableInSignedOffer">
+      1.19. Table in_signed_offer
+    </h3>
+    <h4>
+      1.19.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            signed_offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            case_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.19.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            in_signed_offer_ak_1
+          </td>
+          <td>
+            signed_offer_id, case_id
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tableInOffer">
+      1.20. Table in_offer
+    </h3>
+    <h4>
+      1.20.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            offer_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            case_id
+          </td>
+          <td>
+            int
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            details
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.20.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            in_offer_ak_1
+          </td>
+          <td>
+            offer_id, case_id
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 id="tablePolicyType">
+      1.21. Table policy_type
+    </h3>
+    <p class="infoField">
+      <strong> Description: </strong>
+      all types of policies we offer
+    </p>
+    <h4>
+      1.21.1. Columns
+    </h4>
+    <table class="columnsTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Column name
+          </th>
+          <th>
+            Type
+          </th>
+          <th>
+            Properties
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            id
+          </td>
+          <td>
+            int
+          </td>
+          <td>
+            PK
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            type_name
+          </td>
+          <td>
+            varchar(64)
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            description
+          </td>
+          <td>
+            text
+          </td>
+          <td>
+            null
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            expires
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td>
+            if it expires or not
+          </td>
+        </tr>
+        <tr>
+          <td>
+            monthly_payment
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            quarterly_payment
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            yearly_payment
+          </td>
+          <td>
+            bool
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>
+      1.21.2. Alternate keys
+    </h4>
+    <table class="alternateKeysTable">
+      <thead>
+        <tr class="titleRow">
+          <th>
+            Key name
+          </th>
+          <th>
+            Columns
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            policy_type_ak_1
+          </td>
+          <td>
+            type_name
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="referencesDiv">
+    <h2 id="references">
+      2. Reference
+    </h2>
+    <h3 id="referenceHasRoleEmployee">
+      2.1. Reference has_role_employee
+    </h3>
+    <h4>
+      2.1.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableEmployee"> employee </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableHasRole"> has_role </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          employee_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceHasRoleRole">
+      2.2. Reference has_role_role
+    </h3>
+    <h4>
+      2.2.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableRole"> role </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableHasRole"> has_role </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          role_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceProductProductCategory">
+      2.3. Reference product_product_category
+    </h3>
+    <h4>
+      2.3.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableProductCategory"> product_category </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableProduct"> product </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          product_category_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceClientPerson">
+      2.4. Reference client_person
+    </h3>
+    <h4>
+      2.4.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePerson"> person </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          person_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceClientClientCategory">
+      2.5. Reference client_client_category
+    </h3>
+    <h4>
+      2.5.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClientCategory"> client_category </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_category_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceClientRelatedClient">
+      2.6. Reference client_related_client
+    </h3>
+    <h4>
+      2.6.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableClientRelated"> client_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceClientRelatedPerson">
+      2.7. Reference client_related_person
+    </h3>
+    <h4>
+      2.7.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePerson"> person </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableClientRelated"> client_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          person_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceClientRelatedClientRelationType">
+      2.8. Reference client_related_client_relation_type
+    </h3>
+    <h4>
+      2.8.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClientRelationType"> client_relation_type </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableClientRelated"> client_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_relation_type_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceSignedOfferClient">
+      2.9. Reference signed_offer_client
+    </h3>
+    <h4>
+      2.9.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferClient">
+      2.10. Reference offer_client
+    </h3>
+    <h4>
+      2.10.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceSignedOfferProduct">
+      2.11. Reference signed_offer_product
+    </h3>
+    <h4>
+      2.11.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableProduct"> product </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          product_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferProduct">
+      2.12. Reference offer_product
+    </h3>
+    <h4>
+      2.12.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableProduct"> product </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          product_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceSignedOfferOffer">
+      2.13. Reference signed_offer_offer
+    </h3>
+    <h4>
+      2.13.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferRelatedSignedOffer">
+      2.14. Reference offer_related_signed_offer
+    </h3>
+    <h4>
+      2.14.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOfferRelated"> offer_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          signed_offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferRelatedPerson">
+      2.15. Reference offer_related_person
+    </h3>
+    <h4>
+      2.15.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePerson"> person </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOfferRelated"> offer_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          person_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferRelatedOfferRelationType">
+      2.16. Reference offer_related_offer_relation_type
+    </h3>
+    <h4>
+      2.16.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableOfferRelationType"> offer_relation_type </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOfferRelated"> offer_related </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          offer_relation_type_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePaymentSignedOffer">
+      2.17. Reference payment_signed_offer
+    </h3>
+    <h4>
+      2.17.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayment"> payment </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          signed_offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePayoutSignedOffer">
+      2.18. Reference payout_signed_offer
+    </h3>
+    <h4>
+      2.18.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayout"> payout </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          signed_offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePayoutPayoutReason">
+      2.19. Reference payout_payout_reason
+    </h3>
+    <h4>
+      2.19.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePayoutReason"> payout_reason </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayout"> payout </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          payout_reason_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePaymentPerson">
+      2.20. Reference payment_person
+    </h3>
+    <h4>
+      2.20.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePerson"> person </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayment"> payment </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          person_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePayoutPerson">
+      2.21. Reference payout_person
+    </h3>
+    <h4>
+      2.21.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePerson"> person </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayout"> payout </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          person_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePaymentClient">
+      2.22. Reference payment_client
+    </h3>
+    <h4>
+      2.22.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayment"> payment </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePayoutClient">
+      2.23. Reference payout_client
+    </h3>
+    <h4>
+      2.23.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableClient"> client </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayout"> payout </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          client_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceSignedOfferHasRole">
+      2.24. Reference signed_offer_has_role
+    </h3>
+    <h4>
+      2.24.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableHasRole"> has_role </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          has_role_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferHasRole">
+      2.25. Reference offer_has_role
+    </h3>
+    <h4>
+      2.25.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableHasRole"> has_role </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          has_role_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceInSignedOfferSignedOffer">
+      2.26. Reference in_signed_offer_signed_offer
+    </h3>
+    <h4>
+      2.26.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableInSignedOffer"> in_signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          signed_offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceInOfferOffer">
+      2.27. Reference in_offer_offer
+    </h3>
+    <h4>
+      2.27.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableInOffer"> in_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          offer_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceInSignedOfferCase">
+      2.28. Reference in_signed_offer_case
+    </h3>
+    <h4>
+      2.28.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableCase"> case </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableInSignedOffer"> in_signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          case_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceInOfferCase">
+      2.29. Reference in_offer_case
+    </h3>
+    <h4>
+      2.29.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableCase"> case </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableInOffer"> in_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          case_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referencePayoutCase">
+      2.30. Reference payout_case
+    </h3>
+    <h4>
+      2.30.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tableCase"> case </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tablePayout"> payout </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          case_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceSignedOfferPolicyType">
+      2.31. Reference signed_offer_policy_type
+    </h3>
+    <h4>
+      2.31.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePolicyType"> policy_type </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableSignedOffer"> signed_offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          policy_type_id
+        </td>
+      </tr>
+    </table>
+
+    <h3 id="referenceOfferPolicyType">
+      2.32. Reference offer_policy_type
+    </h3>
+    <h4>
+      2.32.1. Columns
+    </h4>
+    <table class="referencesTable">
+      <tr>
+        <td>
+          <a href="#tablePolicyType"> policy_type </a>
+        </td>
+        <td>
+          0..*
+        </td>
+        <td>
+          <a href="#tableOffer"> offer </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          id
+        </td>
+        <td>
+          <->
+        </td>
+        <td>
+          policy_type_id
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="areasDiv">
+    <h2 id="areas">
+      3. Subject areas
+    </h2>
+    <h3 id="areaClients">
+      3.1. Subject area Clients
+    </h3>
+    <h4>
+      3.1.1. Tables
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#tableClient"> client </a>
+      </li>
+      <li>
+        <a href="#tableClientCategory"> client_category </a>
+      </li>
+      <li>
+        <a href="#tablePerson"> person </a>
+      </li>
+      <li>
+        <a href="#tableClientRelated"> client_related </a>
+      </li>
+      <li>
+        <a href="#tableClientRelationType"> client_relation_type </a>
+      </li>
+    </ul>
+    <h4>
+      3.1.2. References
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+      </li>
+      <li>
+        <a href="#referenceHasRoleRole"> has_role_role </a>
+      </li>
+      <li>
+        <a href="#referenceProductProductCategory">
+          product_product_category
+        </a>
+      </li>
+      <li>
+        <a href="#referenceClientPerson"> client_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientClientCategory"> client_client_category </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClient"> client_related_client </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedPerson"> client_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClientRelationType">
+          client_related_client_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceOfferClient"> offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceOfferProduct"> offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedSignedOffer">
+          offer_related_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedOfferRelationType">
+          offer_related_offer_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+      </li>
+      <li>
+        <a href="#referencePaymentPerson"> payment_person </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPerson"> payout_person </a>
+      </li>
+      <li>
+        <a href="#referencePaymentClient"> payment_client </a>
+      </li>
+      <li>
+        <a href="#referencePayoutClient"> payout_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceOfferHasRole"> offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferSignedOffer">
+          in_signed_offer_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferOffer"> in_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferCase"> in_offer_case </a>
+      </li>
+      <li>
+        <a href="#referencePayoutCase"> payout_case </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferPolicyType">
+          signed_offer_policy_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+      </li>
+    </ul>
+    <h3 id="areaEmployees">
+      3.2. Subject area Employees
+    </h3>
+    <h4>
+      3.2.1. Tables
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#tableEmployee"> employee </a>
+      </li>
+      <li>
+        <a href="#tableRole"> role </a>
+      </li>
+      <li>
+        <a href="#tableHasRole"> has_role </a>
+      </li>
+    </ul>
+    <h4>
+      3.2.2. References
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+      </li>
+      <li>
+        <a href="#referenceHasRoleRole"> has_role_role </a>
+      </li>
+      <li>
+        <a href="#referenceProductProductCategory">
+          product_product_category
+        </a>
+      </li>
+      <li>
+        <a href="#referenceClientPerson"> client_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientClientCategory"> client_client_category </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClient"> client_related_client </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedPerson"> client_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClientRelationType">
+          client_related_client_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceOfferClient"> offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceOfferProduct"> offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedSignedOffer">
+          offer_related_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedOfferRelationType">
+          offer_related_offer_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+      </li>
+      <li>
+        <a href="#referencePaymentPerson"> payment_person </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPerson"> payout_person </a>
+      </li>
+      <li>
+        <a href="#referencePaymentClient"> payment_client </a>
+      </li>
+      <li>
+        <a href="#referencePayoutClient"> payout_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceOfferHasRole"> offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferSignedOffer">
+          in_signed_offer_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferOffer"> in_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferCase"> in_offer_case </a>
+      </li>
+      <li>
+        <a href="#referencePayoutCase"> payout_case </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferPolicyType">
+          signed_offer_policy_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+      </li>
+    </ul>
+    <h3 id="areaProducts">
+      3.3. Subject area Products
+    </h3>
+    <h4>
+      3.3.1. Tables
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#tableProduct"> product </a>
+      </li>
+      <li>
+        <a href="#tableProductCategory"> product_category </a>
+      </li>
+    </ul>
+    <h4>
+      3.3.2. References
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+      </li>
+      <li>
+        <a href="#referenceHasRoleRole"> has_role_role </a>
+      </li>
+      <li>
+        <a href="#referenceProductProductCategory">
+          product_product_category
+        </a>
+      </li>
+      <li>
+        <a href="#referenceClientPerson"> client_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientClientCategory"> client_client_category </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClient"> client_related_client </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedPerson"> client_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClientRelationType">
+          client_related_client_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceOfferClient"> offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceOfferProduct"> offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedSignedOffer">
+          offer_related_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedOfferRelationType">
+          offer_related_offer_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+      </li>
+      <li>
+        <a href="#referencePaymentPerson"> payment_person </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPerson"> payout_person </a>
+      </li>
+      <li>
+        <a href="#referencePaymentClient"> payment_client </a>
+      </li>
+      <li>
+        <a href="#referencePayoutClient"> payout_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceOfferHasRole"> offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferSignedOffer">
+          in_signed_offer_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferOffer"> in_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferCase"> in_offer_case </a>
+      </li>
+      <li>
+        <a href="#referencePayoutCase"> payout_case </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferPolicyType">
+          signed_offer_policy_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+      </li>
+    </ul>
+    <h3 id="areaOffers">
+      3.4. Subject area Offers
+    </h3>
+    <h4>
+      3.4.1. Tables
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#tableOffer"> offer </a>
+      </li>
+      <li>
+        <a href="#tableSignedOffer"> signed_offer </a>
+      </li>
+      <li>
+        <a href="#tableOfferRelated"> offer_related </a>
+      </li>
+      <li>
+        <a href="#tableOfferRelationType"> offer_relation_type </a>
+      </li>
+      <li>
+        <a href="#tableClient"> client </a>
+      </li>
+      <li>
+        <a href="#tablePerson"> person </a>
+      </li>
+      <li>
+        <a href="#tableProduct"> product </a>
+      </li>
+      <li>
+        <a href="#tableHasRole"> has_role </a>
+      </li>
+      <li>
+        <a href="#tableCase"> case </a>
+      </li>
+      <li>
+        <a href="#tableInSignedOffer"> in_signed_offer </a>
+      </li>
+      <li>
+        <a href="#tableInOffer"> in_offer </a>
+      </li>
+      <li>
+        <a href="#tablePolicyType"> policy_type </a>
+      </li>
+    </ul>
+    <h4>
+      3.4.2. References
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+      </li>
+      <li>
+        <a href="#referenceHasRoleRole"> has_role_role </a>
+      </li>
+      <li>
+        <a href="#referenceProductProductCategory">
+          product_product_category
+        </a>
+      </li>
+      <li>
+        <a href="#referenceClientPerson"> client_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientClientCategory"> client_client_category </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClient"> client_related_client </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedPerson"> client_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClientRelationType">
+          client_related_client_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceOfferClient"> offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceOfferProduct"> offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedSignedOffer">
+          offer_related_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedOfferRelationType">
+          offer_related_offer_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+      </li>
+      <li>
+        <a href="#referencePaymentPerson"> payment_person </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPerson"> payout_person </a>
+      </li>
+      <li>
+        <a href="#referencePaymentClient"> payment_client </a>
+      </li>
+      <li>
+        <a href="#referencePayoutClient"> payout_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceOfferHasRole"> offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferSignedOffer">
+          in_signed_offer_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferOffer"> in_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferCase"> in_offer_case </a>
+      </li>
+      <li>
+        <a href="#referencePayoutCase"> payout_case </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferPolicyType">
+          signed_offer_policy_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+      </li>
+    </ul>
+    <h3 id="areaPayments">
+      3.5. Subject area Payments
+    </h3>
+    <h4>
+      3.5.1. Tables
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#tableSignedOffer"> signed_offer </a>
+      </li>
+      <li>
+        <a href="#tablePerson"> person </a>
+      </li>
+      <li>
+        <a href="#tableClient"> client </a>
+      </li>
+      <li>
+        <a href="#tablePayment"> payment </a>
+      </li>
+      <li>
+        <a href="#tablePayout"> payout </a>
+      </li>
+      <li>
+        <a href="#tablePayoutReason"> payout_reason </a>
+      </li>
+      <li>
+        <a href="#tableCase"> case </a>
+      </li>
+    </ul>
+    <h4>
+      3.5.2. References
+    </h4>
+    <ul class="subjectAreaList">
+      <li>
+        <a href="#referenceHasRoleEmployee"> has_role_employee </a>
+      </li>
+      <li>
+        <a href="#referenceHasRoleRole"> has_role_role </a>
+      </li>
+      <li>
+        <a href="#referenceProductProductCategory">
+          product_product_category
+        </a>
+      </li>
+      <li>
+        <a href="#referenceClientPerson"> client_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientClientCategory"> client_client_category </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClient"> client_related_client </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedPerson"> client_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceClientRelatedClientRelationType">
+          client_related_client_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferClient"> signed_offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceOfferClient"> offer_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferProduct"> signed_offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceOfferProduct"> offer_product </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferOffer"> signed_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedSignedOffer">
+          offer_related_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedPerson"> offer_related_person </a>
+      </li>
+      <li>
+        <a href="#referenceOfferRelatedOfferRelationType">
+          offer_related_offer_relation_type
+        </a>
+      </li>
+      <li>
+        <a href="#referencePaymentSignedOffer"> payment_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutSignedOffer"> payout_signed_offer </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPayoutReason"> payout_payout_reason </a>
+      </li>
+      <li>
+        <a href="#referencePaymentPerson"> payment_person </a>
+      </li>
+      <li>
+        <a href="#referencePayoutPerson"> payout_person </a>
+      </li>
+      <li>
+        <a href="#referencePaymentClient"> payment_client </a>
+      </li>
+      <li>
+        <a href="#referencePayoutClient"> payout_client </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferHasRole"> signed_offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceOfferHasRole"> offer_has_role </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferSignedOffer">
+          in_signed_offer_signed_offer
+        </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferOffer"> in_offer_offer </a>
+      </li>
+      <li>
+        <a href="#referenceInSignedOfferCase"> in_signed_offer_case </a>
+      </li>
+      <li>
+        <a href="#referenceInOfferCase"> in_offer_case </a>
+      </li>
+      <li>
+        <a href="#referencePayoutCase"> payout_case </a>
+      </li>
+      <li>
+        <a href="#referenceSignedOfferPolicyType">
+          signed_offer_policy_type
+        </a>
+      </li>
+      <li>
+        <a href="#referenceOfferPolicyType"> offer_policy_type </a>
+      </li>
+    </ul>
+  </div>
+</body>
+
+</html>
